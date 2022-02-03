@@ -6,6 +6,7 @@ html{
   min-height: 100%;
   overflow: hidden;
 }
+
 body{
   height: calc(100vh - 8em);
   padding: 4em;
@@ -13,29 +14,40 @@ body{
   font-family: 'Anonymous Pro', monospace;  
   background-color: rgb(25,25,25);  
 }
-.line-1{
-    position: relative;
-    top: 50%;  
-    width: 24em;
-    margin: 0 auto;
-    border-right: 2px solid rgba(255,255,255,.75);
-    font-size: 180%;
-    text-align: center;
-    white-space: nowrap;
+
+.typewriter h1{
+  width: auto;
+  display: inline-block;
+  overflow: hidden;
+  border-right: .15em solid transparent;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: .15em;
+  animation: typing 4s steps(100, end),
+			 blink-caret .75s step-end;
+       
+  }
+
+  .typewriter h2{
+    width: auto;
+    display: inline-block;
     overflow: hidden;
-    transform: translateY(-50%);    
+    border-right: .15em solid white;
+    white-space: nowrap;
+    margin: 0 auto;
+    letter-spacing: .15em;
+    animation: typing 4s steps(100, end),
+         blink-caret .75s step-end infinite;
+    animation-delay: 2s;  
+    animation-fill-mode: both;
+    }
+
+@keyframes typing{
+  from {max-width: 0}
+  to {max-width: 100%}
 }
 
-/* Animation */
-.anim-typewriter{
-  animation: typewriter 4s steps(44) 1s 1 normal both,
-             blinkTextCursor 500ms steps(44) infinite normal;
-}
-@keyframes typewriter{
-  from{width: 0;}
-  to{width: 24em;}
-}
-@keyframes blinkTextCursor{
-  from{border-right-color: rgba(255,255,255,.75);}
-  to{border-right-color: transparent;}
+@keyframes blink-caret{
+  from, to {border-color: rgba(255,255,255,.75);}
+  50% {border-color: transparent}
 }
