@@ -22,17 +22,16 @@
     <button type="button" class="btn btn-light" onclick="mintNFT()">Mint NFT</button>
     <button type="button" class="btn btn-light" onclick="mintCoin()">Mint Coin</button>
     <button id="btn-login" type="button" class="btn btn-primary" onclick="login()">Connect Wallet</button>
-    <button id="btn-logout" type="button" class="btn btn-danger">Disconnect Wallet</button>
+    <button id="btn-logout" type="button" class="btn btn-danger" onclick="logOut()">Disconnect Wallet</button>
 
     <p></p>
-    <h5 onload="getNftSupply()">
-      Total NFT Supply:
+    <h5 onclick="getNftSupply()">
+      Total NFT Supply (Click me):
       <div id="totalNftSupply"></div>
     </h5>
-    <h5 onload="getCoinSupply()">
-      Total Token Supply: 
-      <div id="totalCoinSupply"></div> 
-      /1000000
+    <h5 onclick="getCoinSupply()">
+      Current Token Supply (Click me): 
+      <div id="totalCoinSupply"></div>/1000000
     </h5>
     
     

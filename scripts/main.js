@@ -9,6 +9,7 @@ async function login() {
       .then(function (user) {
         console.log("logged in user:", user);
         console.log(user.get("ethAddress"));
+        alert("You have logged into MetaMask!");
       })
       .catch(function (error) {
         console.log(error);
@@ -19,6 +20,7 @@ async function login() {
 async function logOut() {
   await Moralis.User.logOut();
   console.log("logged out");
+  alert("You have logged out from MetaMask!");
 }
 
 async function mintNFT() {
