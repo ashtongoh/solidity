@@ -1222,49 +1222,43 @@ pragma solidity ^0.8.0;
 // Admin and owner roles can still be set
 /////////////////////////////////////////////
 
-
 contract VestingMain is ERC20 {
 
     VestingWallet private wallet;
     //PaymentSplitter private splitter;
 
     //uint256[] amtArr;
-    address[] addArr;
-
-    constructor()  ERC20("Ashton Token", "ASH"){
-        _mint(msg.sender, 1000000000);
-    }
+    //address[] addArr;
 
     // Please start this first before clicking startVesting()
     // function startSplitter(address[] memory _addArr) public {
-        
     //    addArr = _addArr;
-
     //     uint256[] memory amtArr =  new uint256[](addArr.length);
-
     //     for(uint i = 0; i < addArr.length; i++){
     //         amtArr[i] = 1;
     //     }
-
     //     splitter = new PaymentSplitter(addArr, amtArr);
-
     // }
 
+    function claimToken() public {
+        _mint(_msgSender(), 100000000);
+    }
+
     // This works
-    function startVesting() public {
+    function startVesting(address splitAddr) public {
         
         // Since _duration takes in seconds.
         // Treat seconds as N variable
         // 1 min = 60 seconds
         // Hence, 1 min = N * 60
 
-        // Creates an instance of vesting wallet
+        // Creates an instance of vesting wallet with a new Split Payment contract
         // Vesting starts now
         // Lasts for 1 year
         // Releases every minute
-        wallet = new VestingWallet(0xDA0bab807633f07f013f94DD0E6A4F96F8742B53, uint64(block.timestamp), 31536000*60);
+        wallet = new VestingWallet(splitAddr, uint64(block.timestamp), 31536000*60);
 
-        // Transfer 100m tokens from this address to the VestingWallet (wallet)
+        // Transfer 100m tokens from this msg.sender to the VestingWallet (wallet)
         transfer(address(wallet),100000000);
         
     }
@@ -1274,4 +1268,6 @@ contract VestingMain is ERC20 {
     function tryRelease() public {
         wallet.release(address(this)); 
     }
+
+    constructor()  ERC20("Ashton Token", "ASH"){}
 }
