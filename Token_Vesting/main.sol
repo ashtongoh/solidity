@@ -1252,7 +1252,7 @@ contract VestingMain is ERC20 {
         // 1 min = 60 seconds
         // Hence, 1 min = N * 60
 
-        // Creates an instance of vesting wallet with a new Split Payment contract
+        // Creates an instance of vesting wallet with a new Payment Splitter contract
         // Vesting starts now
         // Lasts for 1 year
         // Releases every minute
@@ -1264,7 +1264,7 @@ contract VestingMain is ERC20 {
     }
 
     // address(this) refers to ERC20 token contract address
-    // wallet.release() releases vested tokens to PaymentSplitter contract
+    // wallet.release() releases vested tokens to Payment Splitter contract
     function tryRelease() public {
         wallet.release(address(this)); 
     }
