@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <title>Ashton Web3</title>
+  </head>
+  <body>
+
+    <div class="typewriter">
+        <h1>Hi, I'm Ashton!</h1>
+    </div>
+    <div class="typewriter">
+        <h2>Click below to mint a NFT :)</h2>
+    </div>
+
+    <button type="button" class="btn btn-light" onclick="mintNFT()">Mint NFT</button>
+    <!-- <button type="button" class="btn btn-light" onclick="mintCoin()">Mint Coin</button> -->
+    <button id="btn-login" type="button" class="btn btn-primary" onclick="login()">Connect Wallet</button>
+    <button id="btn-logout" type="button" class="btn btn-danger" onclick="logOut()">Disconnect Wallet</button>
+
+    <p>
+      <h5 onclick="getNftSupply()">
+        Total NFT Supply (Click me):
+        <div id="totalNftSupply"></div>
+      </h5>
+      <!-- <h5 onclick="getCoinSupply()">
+        Current Token Supply (Click me): 
+        <div id="totalCoinSupply"></div>/1000000
+      </h5> -->
+    </p>
+    <br>
+
+    <p>
+      <h2>Token Vesting starts below!</h2>
+    </p>
+    
+    <p>
+      <h5>
+        Step 1: Mint 100m tokens to your account first <br>
+        This is so simulate the injection of funds into the vesting mechanism
+      </h5>
+      <button type="button" class="btn btn-light" onclick="mintCoin()">Mint Coins</button>
+    </p>
+    <br>
+
+    <p>
+      <h5>
+        Step 2: Start vesting by inserting Split Payment Wallet address <br>
+
+        I have already keyed in the wallet address for you
+      </h5>
+      Contract Address: <input type="text" id="splitAddr" value="0x704ecbbb19756B5fE925f4b120d1874e0e0F42C3">
+      <button type="button" class="btn btn-light" onclick="startVesting()">Start Vesting</button>
+    </p>
+    <br>
+
+    <p>
+      <h5>
+        Step 3: Add new payees and their share proportions to the Split Payment Wallet <br>
+        Example: ["0x123", "0x456"] <br>
+        Example: [1, 1] <br> 
+        <br> 
+        *Please ensure that they are in the same format* 
+      </h5>
+      Payees: <input type="text" id="payees" placeholder='[0x123", "0x456"]'><br>
+      Shares: <input type="text" id="shares" placeholder="[1, 1]">
+      <button type="button" class="btn btn-light" onclick="addPayees()">Add Payees</button>
+    </p>
+    <br>
+
+    <p>
+      <h5> 
+        Step 4: Release vesting amount from Vesting Wallet to Split Payment Wallet <br>
+      </h5>
+      <button type="button" class="btn btn-light" onclick="tryRelease()">Release Vesting</button><br><br>
+    </p>
+    <br>
+
+    <p>
+      <h5> 
+        Step 5: Batch release vesting amount from Split Payment Wallet, and split it among all the payees (Account holders) <br>
+      </h5>
+      <button type="button" class="btn btn-light" onclick="batchRelease()">Batch Release</button><br><br>
+    </p>
+    <br>
+
+    <p>
+      <h5> 
+        Step 6: You can check the released amount for a particular payee <br>
+        Example: 0x123 <br>
+        <br> 
+        *Please ensure that they are in the same format* 
+      </h5>
+      Payee Address: <input type="text" id="released" placeholder="0x123">
+      <button type="button" class="btn btn-light" onclick="released()">Check Released</button>
+      <div id="releasedAmount"></div>
+    </p>
+    <br>
+
+    <p>
+      <h5> 
+        Step 7: You can check the total released amount of all ERC20 tokens <br>
+      </h5>
+      <button type="button" class="btn btn-light" onclick="totalReleased()">Total Released</button>
+      <div id="totalReleased"></div>
+    </p>
+    <br>
+
+    <p>
+      <h5> 
+        Step 8: If you wish to release more funds from the Vesting Wallet to the Split Payment Wallet, please repeat from Step 4 again.<br>
+      </h5>
+    </p>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+    <script type="text/javascript" src="scripts/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  </body>
+</html>
