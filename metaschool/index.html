@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <title>Ashton Web3</title>
+  </head>
+  <body>
+
+    <div class="typewriter">
+        <h1>Hi, I'm Ashton!</h1>
+    </div>
+    <div class="typewriter">
+        <h2>Click below to start minting :)</h2>
+    </div>
+
+    <button type="button" class="btn btn-light" onclick="mintNFT()">Mint NFT</button>
+    <button type="button" class="btn btn-light" onclick="mintCoin()">Mint Coin</button>
+    <button id="btn-login" type="button" class="btn btn-primary" onclick="login()">Connect Wallet</button>
+    <button id="btn-logout" type="button" class="btn btn-danger" onclick="logOut()">Disconnect Wallet</button>
+
+    <p></p>
+    <h5 onclick="getNftSupply()">
+      Total NFT Supply (Click me):
+      <div id="totalNftSupply"></div>
+    </h5>
+    <h5 onclick="getCoinSupply()">
+      Current Token Supply (Click me): 
+      <div id="totalCoinSupply"></div>/1000000
+    </h5>
+    <br>
+    <br>
+
+
+    <p>
+      <h2>Mint MetaSchool NFT below!</h2>
+    </p>
+
+    <p>
+      <h5>
+        Key in the recipient address you want to mint to! <br>
+        This is with the onlyOwner modifier which only allows the owner to mint. <br>
+        The transaction will definitely fail if you mint with any other address apart from the owner's <br>
+        Try it out!
+      </h5>
+      Recipient Address: <input type="text" id="recipient" placeholder="0x123">
+      <button type="button" class="btn btn-light" onclick="mintMeta()">Mint MetaSchool NFT</button>
+    </p>
+    <br>
+
+
+    <p>
+      <h5>
+        Key in the recipient address you want to mint to! <br>
+        This is without the onlyOwner modifier which allows the public to mint. <br>
+        Try it out!
+      </h5>
+      Recipient Address: <input type="text" id="recipient1" placeholder="0x123">
+      <button type="button" class="btn btn-light" onclick="mintMetaOne()">Mint MetaSchool NFT</button>
+    </p>
+    <br>
+    
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+    <script type="text/javascript" src="scripts/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  </body>
+</html>
