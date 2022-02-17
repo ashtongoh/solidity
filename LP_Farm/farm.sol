@@ -104,6 +104,72 @@ abstract contract Ownable is Context {
     }
 }
 
+// File: @openzeppelin/contracts/security/ReentrancyGuard.sol
+
+
+// OpenZeppelin Contracts v4.4.1 (security/ReentrancyGuard.sol)
+
+pragma solidity ^0.8.0;
+
+/**
+ * @dev Contract module that helps prevent reentrant calls to a function.
+ *
+ * Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier
+ * available, which can be applied to functions to make sure there are no nested
+ * (reentrant) calls to them.
+ *
+ * Note that because there is a single `nonReentrant` guard, functions marked as
+ * `nonReentrant` may not call one another. This can be worked around by making
+ * those functions `private`, and then adding `external` `nonReentrant` entry
+ * points to them.
+ *
+ * TIP: If you would like to learn more about reentrancy and alternative ways
+ * to protect against it, check out our blog post
+ * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].
+ */
+abstract contract ReentrancyGuard {
+    // Booleans are more expensive than uint256 or any type that takes up a full
+    // word because each write operation emits an extra SLOAD to first read the
+    // slot's contents, replace the bits taken up by the boolean, and then write
+    // back. This is the compiler's defense against contract upgrades and
+    // pointer aliasing, and it cannot be disabled.
+
+    // The values being non-zero value makes deployment a bit more expensive,
+    // but in exchange the refund on every call to nonReentrant will be lower in
+    // amount. Since refunds are capped to a percentage of the total
+    // transaction's gas, it is best to keep them low in cases like this one, to
+    // increase the likelihood of the full refund coming into effect.
+    uint256 private constant _NOT_ENTERED = 1;
+    uint256 private constant _ENTERED = 2;
+
+    uint256 private _status;
+
+    constructor() {
+        _status = _NOT_ENTERED;
+    }
+
+    /**
+     * @dev Prevents a contract from calling itself, directly or indirectly.
+     * Calling a `nonReentrant` function from another `nonReentrant`
+     * function is not supported. It is possible to prevent this from happening
+     * by making the `nonReentrant` function external, and making it call a
+     * `private` function that does the actual work.
+     */
+    modifier nonReentrant() {
+        // On the first call to nonReentrant, _notEntered will be true
+        require(_status != _ENTERED, "ReentrancyGuard: reentrant call");
+
+        // Any calls to nonReentrant after this point will fail
+        _status = _ENTERED;
+
+        _;
+
+        // By storing the original value once again, a refund is triggered (see
+        // https://eips.ethereum.org/EIPS/eip-2200)
+        _status = _NOT_ENTERED;
+    }
+}
+
 // File: @openzeppelin/contracts/token/ERC20/IERC20.sol
 
 
@@ -194,7 +260,7 @@ interface IERC20 {
 pragma solidity ^0.8.0;
 
 
-//import "hardhat/console.sol";
+
 
 
 interface IAshtonCoin {
@@ -202,10 +268,10 @@ interface IAshtonCoin {
 }
 
 interface IAshtonNFT {
-    function claim() external;
+    function claim(address to) external;
 }
 
-contract TokenFarm is Ownable {
+contract TokenFarm is Ownable, ReentrancyGuard {
 
     struct User {
         uint256[3] stakingBalance;
@@ -215,20 +281,20 @@ contract TokenFarm is Ownable {
     }
 
     // Default value is 10
-    uint256 rewardDivisor = 10;
+    uint256 public rewardDivisor = 10;
 
     // Store the address of the LP tokens
-    mapping(uint256 => IERC20) private addressMapping;
+    mapping(uint256 => IERC20) addressMapping;
 
     // Maps user address to user object (struct)
     mapping(address => User) addrToUser;
 
     // This is to store the block rewards for each token
-    mapping(uint256 => uint256) private tokenRewardMapping;
+    mapping(uint256 => uint256) tokenRewardMapping;
 
     // Rewards: ERC20 and ERC721
-    address ashtonCoinAddress;
-    address ashtonNFTAddress;
+    address public ashtonCoinAddress;
+    address public ashtonNFTAddress;
 
     constructor(){
         tokenRewardMapping[0] = 50; // LP Token 1
@@ -236,11 +302,11 @@ contract TokenFarm is Ownable {
         tokenRewardMapping[2] = 20; // LP Token 3
     }
 
-    function stake(uint256 amount, uint256 index) public {
+    function stake(uint256 amount, uint256 index) public nonReentrant{
          // Get address of particular LP token
         IERC20 thisLPToken = addressMapping[index];
 
-        require(amount > 0 && thisLPToken.balanceOf(msg.sender) >= amount, "You cannot stake zero tokens");
+        require(amount > 0 && thisLPToken.balanceOf(msg.sender) >= amount, "You cannot stake zero tokens!");
     
         User memory thisUser;
         thisUser = addrToUser[msg.sender];
@@ -270,12 +336,12 @@ contract TokenFarm is Ownable {
         //console.log("Amount Staked:", amount);
     }
 
-    function unstake(uint256 amount, uint256 index) public {
+    function unstake(uint256 amount, uint256 index) public nonReentrant{
     
         User memory thisUser;
         thisUser = addrToUser[msg.sender];
         
-        require(thisUser.isStaking[index] = true && thisUser.stakingBalance[index] >= amount, "Nothing to unstake");
+        require(thisUser.isStaking[index] = true && thisUser.stakingBalance[index] >= amount, "Insufficient tokens to unstake!");
 
         // Get address of particular LP token
         IERC20 thisLPToken = addressMapping[index]; 
@@ -305,7 +371,7 @@ contract TokenFarm is Ownable {
         //console.log("Amount unstaked:", amount);
     }
 
-    function withdrawRewards(uint256 index) public {
+    function withdrawRewards(uint256 index) public nonReentrant{
         // This withdraws all rewards
 
         // Put require function here for users that dont exist in the mapping
@@ -314,20 +380,18 @@ contract TokenFarm is Ownable {
         User memory thisUser;
         thisUser = addrToUser[msg.sender];
 
-        require(rewards > 0 || thisUser.rewardBalance[index] > 0, "Nothing to withdraw");
-            
+        require(rewards > 0 || thisUser.rewardBalance[index] > 0, "No reward to withdraw!");
+        
+        // If current reward balance is not 0, withdraw everything
         if(thisUser.rewardBalance[index] != 0){
-            uint256 oldBalance = thisUser.rewardBalance[index];
+            uint256 prevRewards = thisUser.rewardBalance[index];
             thisUser.rewardBalance[index] = 0;
-            rewards += oldBalance;
+            rewards += prevRewards;
         }
 
         // Extra NFT reward
-        uint256 currentBlock = block.number;
-        uint256 startingBlock = addrToUser[msg.sender].startTime[index];
-
-        if((currentBlock - startingBlock) >= 5 ){
-            IAshtonNFT(ashtonNFTAddress).claim();
+        if(rewards > 2000 ){
+            IAshtonNFT(ashtonNFTAddress).claim(msg.sender);
         }
 
         // Normal reward: Ashton coin
@@ -354,6 +418,7 @@ contract TokenFarm is Ownable {
         return reward;
     }
 
+    // Check currently staked amount
     function checkStaked(uint256 _index) public view returns (uint256){
         return addrToUser[msg.sender].stakingBalance[_index];
     }
@@ -385,5 +450,4 @@ contract TokenFarm is Ownable {
         addressMapping[1] = _address2;
         addressMapping[2] = _address3;
     }
-
 }
